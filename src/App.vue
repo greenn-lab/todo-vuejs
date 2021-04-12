@@ -1,28 +1,43 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <todo-input @add="addTodo"/>
+    <todo-list :todos="todos" @remove="removeTodo"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TodoInput from '@/components/TodoInput'
+import TodoList from "@/components/TodoList";
+import v4 from "uuid";
+import axios from "axios";
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    TodoInput, TodoList
+  },
+  methods: {
+    addTodo(value) {
+      this.todos.push({
+        id: v4(),
+        title: value,
+        completed: false
+      })
+    },
+    removeTodo(id) {
+      this.todos.splice(this.todos.findIndex(i => i.id === id), 1)
+    }
+  },
+  data() {
+    return {
+      todos: []
+    }
+  },
+  mounted() {
+    axios.get('https://jsonplaceholder.typicode.com/todos')
+        .then(function(res) {
+          this.todos = res.data
+        }.bind(this))
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
