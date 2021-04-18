@@ -1,6 +1,6 @@
 <template>
   <ul>
-    <li v-for="todo in todos" :key="todo.id" class="todo-item">
+    <li v-for="todo in todos.slice().reverse()" :key="todo.id" class="todo-item">
       <p class="todo-item__value">{{ todo.title }}</p>
       <button class="todo-item__remove" type="button" @click="remove(todo.id)">&times;</button>
     </li>
